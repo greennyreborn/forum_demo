@@ -2,9 +2,10 @@
 
 namespace App\Exceptions;
 
+use App\Libraries\Utils\Err;
 use Exception;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
 
 class Handler extends ExceptionHandler
 {
@@ -44,22 +45,46 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        // HttpException
+        if (method_exists($exception, 'getStatusCode')) {
+            return $this->renderJson($request, $exception);
+        }
+
+        if (!env('APP_DEBUG')) {
+            $headers = $this->getAllowOriginHeaders($request);
+            $headers = $headers ?: [];
+            $result['error_code'] = Err::SERVER_INTERNAL_ERROR;
+            $result['error_msg'] = Err::getMsg(Err::SERVER_INTERNAL_ERROR);
+            return response($result, 500, $headers);
+        }
+
         return parent::render($request, $exception);
     }
 
-    /**
-     * Convert an authentication exception into an unauthenticated response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Auth\AuthenticationException  $exception
-     * @return \Illuminate\Http\Response
-     */
-    protected function unauthenticated($request, AuthenticationException $exception)
+    protected function getAllowOriginHeaders(Request $request)
     {
-        if ($request->expectsJson()) {
-            return response()->json(['error' => 'Unauthenticated.'], 401);
+        $origin = $request->header('origin');
+        $headers = get_cross_domain_headers($origin);
+        return $headers;
+    }
+
+    protected function renderJson($request, Exception $exception)
+    {
+        $status_code = intval($exception->getStatusCode());
+        $result = [
+            'error_code' => $exception->getCode(),
+            'error_msg' => $exception->getMessage() ?: Err::getMsg($exception->getCode()),
+        ];
+
+        if ($status_code == 404 || $status_code == 405) {
+            $result['error_code'] = Err::REQUEST_ERROR;
+            $result['error_msg'] = Err::getMsg(Err::REQUEST_ERROR);
         }
 
-        return redirect()->guest('login');
+        $headers = $this->getAllowOriginHeaders($request);
+        $headers = $headers ?: [];
+
+        return response($result, $status_code, $headers);
     }
+
 }

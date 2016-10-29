@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'My Application',
+    'name' => 'Forum demo',
 
     /*
     |--------------------------------------------------------------------------
@@ -106,6 +106,9 @@ return [
     'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
+
+    // 用于密码加密的salt
+    'salt' => env('APP_SALT', 'default_salt'),
 
     /*
     |--------------------------------------------------------------------------
@@ -226,5 +229,10 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
+
+    'white_domains' => [
+        'demo.forum.dev',
+        'forum.greenny.me'
+    ]
 
 ];

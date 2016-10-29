@@ -13,4 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/}', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('home');
+
+Route::group([
+    'prefix' => 'user'
+], function () {
+    Route::post('create', 'UserController@create');
+});
