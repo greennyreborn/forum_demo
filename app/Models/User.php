@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Libraries\Utils\Err;
+use Illuminate\Database\Eloquent\Collection;
 
 class User extends BaseModel
 {
@@ -56,7 +57,7 @@ class User extends BaseModel
 
     /**
      * @param $username
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getUserByUsername($username)
     {

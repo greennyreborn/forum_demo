@@ -18,5 +18,20 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::group([
     'prefix' => 'user'
 ], function () {
-    Route::post('create', 'UserController@create');
+    Route::post('', 'UserController@create');
+});
+
+Route::group([
+    'prefix' => 'topic'
+], function () {
+    Route::get('{topic_id}', 'TopicController@index');
+    Route::post('user/{uid}', 'TopicController@create');
+    Route::put('{topic_id}', 'TopicController@edit');
+});
+
+Route::group([
+    'prefix' => 'post'
+], function () {
+    Route::post('topic/{topic_id}', 'PostController@create');
+    Route::put('{post_id}', 'PostController@edit');
 });

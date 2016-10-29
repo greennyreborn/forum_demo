@@ -14,12 +14,23 @@ class Err
 
     const SERVER_INTERNAL_ERROR = 50000;
     const USER_CREATE_ERROR = 50001;
+    const TOPIC_CREATE_ERROR = 50002;
+    const POST_CREATE_ERROR = 50003;
+
+    const TOPIC_NOT_EXIST = 60001;
+    const POST_NOT_EXIST = 60002;
 
     protected static $msg = [
         '40000' => '错误的请求地址或方法',
         '40003' => '请求参数错误',
+
         '50000' => '内部服务器错误',
         '50001' => '用户创建失败',
+        '50002' => '主题创建失败',
+        '50003' => '回复创建失败',
+
+        '60001' => '主题不存在',
+        '60002' => '回复不存在',
     ];
 
     public static function getMsg($code)
