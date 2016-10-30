@@ -23,7 +23,7 @@ class User extends BaseModel
     {
         $this->username = $params['username'];
         $this->password = $this->generatePassword($params['password']);
-        $this->avatar = $params['avatar'] ?: '';
+        $this->avatar = isset($params['avatar']) ? $params['avatar'] : '';
         $this->uid = $this->generateUid($params['ip']);
 
         if ($this->hasUserExisted($this->username)) {

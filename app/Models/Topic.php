@@ -14,9 +14,23 @@ class Topic extends BaseModel
 {
     const TYPE_DEFAULT = 1; // 默认主题
 
+    const SIZE = 50;
+
     protected $table = 'topic';
 
+    protected $hidden = ['id', 'updated_at'];
+
     protected $dateFormat = 'U';
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'uid', 'uid');
+    }
+
+    public function lastReplyUser()
+    {
+        return $this->belongsTo(User::class, 'last_reply_uid', 'uid');
+    }
 
     public function posts()
     {
@@ -28,7 +42,7 @@ class Topic extends BaseModel
         $now = time();
         $this->topic_id = $this->generateTopicId($params['ip']);
         $this->title = $params['title'];
-        $this->type = $params['type'] ?: self::TYPE_DEFAULT;
+        $this->type = isset($params['type']) ? $params['type'] : self::TYPE_DEFAULT;
         $this->content = $params['content'];
         $this->uid = $authorId;
         $this->title = $params['title'];
@@ -79,12 +93,70 @@ class Topic extends BaseModel
     }
 
     /**
-     * @param $topicId
+     * @param $params
      * @return Collection
      */
-    public function getTopicDetail($topicId)
+    public function getTopicList($params)
     {
-        return $this->where('topic_id', $topicId)->with('posts')->first();
+        $offset = isset($params['offset']) ? $params['offset'] : 0;
+        $size = isset($params['size']) ? $params['size'] : self::SIZE;
+        return $this->getTopicListFromDB($offset, $size);
+    }
+
+    /**
+     * @param int $offset
+     * @param int $size
+     * @return Collection
+     */
+    public function getTopicListFromDB($offset = 0, $size = self::SIZE)
+    {
+        return $this->with([
+            'user' => function ($query) {
+                $query->select('uid', 'username');
+            },
+            'lastReplyUser' => function ($query) {
+                $query->select('uid', 'username');
+            },
+        ])
+            ->skip($offset)
+            ->take($size)
+            ->get();
+    }
+
+    /**
+     * @param $topicId
+     * @param int $offset
+     * @param int $size
+     * @return Collection
+     */
+    public function getTopicDetail($topicId, $offset = 0, $size = self::SIZE)
+    {
+        return $this->getTopicDetailFromBD($topicId, $offset, $size);
+    }
+
+    /**
+     * @param $topicId
+     * @param int $offset
+     * @param int $size
+     * @return Collection
+     */
+    public function getTopicDetailFromBD($topicId, $offset = 0, $size = self::SIZE)
+    {
+        return $this->where('topic_id', $topicId)
+            ->with([
+                'user' => function ($query) {
+                    $query->select('uid', 'username');
+                },
+                'posts' => function ($query) use ($offset, $size) {
+                    $query->skip($offset)
+                        ->take($size)
+                        ->orderBy('id', 'ASC');
+                },
+                'posts.user' => function ($query) {
+                    $query->select('uid', 'username');
+                },
+            ])
+            ->first();
     }
 
     protected function generateTopicId($ip)

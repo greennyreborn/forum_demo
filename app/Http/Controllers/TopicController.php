@@ -22,12 +22,25 @@ class TopicController extends Controller
         $this->topicDao = $topic;
     }
 
+    public function getList()
+    {
+        $params = [
+            'offset' => $this->request->query('offset', ''),
+            'size' => $this->request->query('size', ''),
+        ];
+        $params = array_filter($params);
+        $topics = $this->topicDao->getTopicList($params);
 
-    public function index($topicId)
+        return [
+            'topic_list' => $topics,
+        ];
+    }
+
+    public function detail($topicId)
     {
         $topic = $this->topicDao->getTopicDetail($topicId);
 
-        return $topic->toArray();
+        return $topic;
     }
 
     /**

@@ -24,7 +24,8 @@ Route::group([
 Route::group([
     'prefix' => 'topic'
 ], function () {
-    Route::get('{topic_id}', 'TopicController@index');
+    Route::get('list', 'TopicController@getList');
+    Route::get('{topic_id}', 'TopicController@detail');
     Route::post('user/{uid}', 'TopicController@create');
     Route::put('{topic_id}', 'TopicController@edit');
 });

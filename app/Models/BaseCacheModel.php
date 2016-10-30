@@ -62,6 +62,9 @@ class BaseCacheModel
         return null;
     }
 
+    /**
+     * @return \Illuminate\Support\Collection
+     */
     protected function getCacheContent()
     {
         $res = null;
@@ -74,7 +77,7 @@ class BaseCacheModel
             $result = json_decode($res, true);
         }
 
-        return $result;
+        return collect($result);
     }
 
     protected function cache($items)

@@ -12,6 +12,8 @@ use Illuminate\Database\Query\Builder;
 
 class BaseModel extends Model
 {
+    const SIZE = 20; // default page size
+
     protected $redis = '';
 
     protected $hidden = ['id', 'created_at', 'updated_at'];

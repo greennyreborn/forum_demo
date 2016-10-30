@@ -28,7 +28,7 @@ class UserController extends Controller
         $params = [
             'username' => $requestParams['username'],
             'password' => $requestParams['password'],
-            'avatar' => $requestParams['avatar'] ?: '',
+            'avatar' => isset($requestParams['avatar']) ? $requestParams['avatar'] : '',
             'ip' => $this->request->ip(),
         ];
 

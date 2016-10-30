@@ -16,6 +16,11 @@ class Post extends BaseModel
 
     protected $dateFormat = 'U';
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'uid', 'uid');
+    }
+
     public function topic()
     {
         return $this->belongsTo(Topic::class, 'topic_id', 'topic_id');
