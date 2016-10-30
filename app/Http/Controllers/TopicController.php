@@ -45,7 +45,14 @@ class TopicController extends Controller
         if (!checkModelResult($this->topicDao->getTopicInfo($topicId))) {
             fAbort(403, Err::TOPIC_NOT_EXIST);
         }
-        $topic = $this->topicDao->getTopicDetail($topicId);
+
+        $params = [
+            'offset' => $this->request->query('offset', ''),
+            'size' => $this->request->query('size', ''),
+        ];
+        $params = array_filter($params);
+
+        $topic = $this->topicDao->getTopicDetail($topicId, $params);
 
         return $topic;
     }

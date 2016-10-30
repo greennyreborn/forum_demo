@@ -16,6 +16,8 @@ class Post extends BaseModel
 
     protected $dateFormat = 'U';
 
+    protected $hidden = ['id', 'updated_at'];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'uid', 'uid');

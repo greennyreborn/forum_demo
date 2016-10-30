@@ -125,12 +125,14 @@ class Topic extends BaseModel
 
     /**
      * @param $topicId
-     * @param int $offset
-     * @param int $size
+     * @param $params
      * @return Collection
      */
-    public function getTopicDetail($topicId, $offset = 0, $size = self::SIZE)
+    public function getTopicDetail($topicId, $params)
     {
+        $offset = isset($params['offset']) ? $params['offset'] : 0;
+        $size = isset($params['size']) ? $params['size'] : self::SIZE;
+        
         return $this->getTopicDetailFromBD($topicId, $offset, $size);
     }
 
