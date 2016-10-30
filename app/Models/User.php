@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Libraries\Utils\Err;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 class User extends BaseModel
 {
@@ -25,8 +25,7 @@ class User extends BaseModel
         $this->password = $this->generatePassword($params['password']);
         $this->avatar = isset($params['avatar']) ? $params['avatar'] : '';
         $this->uid = $this->generateUid($params['ip']);
-
-        if ($this->hasUserExisted($this->username)) {
+        if (checkModelResult($this->getUserByUsername($this->username))) {
             fAbort(403, Err::USER_CREATE_ERROR);
         }
 
@@ -48,12 +47,23 @@ class User extends BaseModel
         return $result;
     }
 
-    private function hasUserExisted($username)
+    /**
+     * @param $uid
+     * @return Collection
+     */
+    public function getUserByUid($uid)
     {
-        $user = $this->getUserByUsername($username);
-        return !$user->isEmpty();
+        return $this->remember(600)->getUserByUidFromDB($uid);
     }
 
+    /**
+     * @param $uid
+     * @return Collection
+     */
+    public function getUserByUidFromDB($uid)
+    {
+        return $this->where('uid', $uid)->first();
+    }
 
     /**
      * @param $username
@@ -61,7 +71,7 @@ class User extends BaseModel
      */
     public function getUserByUsername($username)
     {
-        return $this->where('username', $username)->get();
+        return $this->where('username', $username)->first();
     }
 
     protected function generatePassword($rawPassword)

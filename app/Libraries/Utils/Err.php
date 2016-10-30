@@ -19,6 +19,7 @@ class Err
 
     const TOPIC_NOT_EXIST = 60001;
     const POST_NOT_EXIST = 60002;
+    const USER_NOT_EXIST = 60003;
 
     protected static $msg = [
         '40000' => '错误的请求地址或方法',
@@ -31,6 +32,7 @@ class Err
 
         '60001' => '主题不存在',
         '60002' => '回复不存在',
+        '60003' => '用户不存在',
     ];
 
     public static function getMsg($code)

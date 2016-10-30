@@ -9,6 +9,7 @@ namespace App\Http\Controllers;
 
 use App\Libraries\Utils\Err;
 use App\Models\Topic;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -16,10 +17,13 @@ class TopicController extends Controller
 {
     private $topicDao;
 
-    public function __construct(Request $request, Topic $topic)
+    private $userDao;
+
+    public function __construct(Request $request, Topic $topic, User $user)
     {
         parent::__construct($request);
         $this->topicDao = $topic;
+        $this->userDao = $user;
     }
 
     public function getList()
@@ -38,6 +42,9 @@ class TopicController extends Controller
 
     public function detail($topicId)
     {
+        if (!checkModelResult($this->topicDao->getTopicInfo($topicId))) {
+            fAbort(403, Err::TOPIC_NOT_EXIST);
+        }
         $topic = $this->topicDao->getTopicDetail($topicId);
 
         return $topic;
@@ -60,6 +67,10 @@ class TopicController extends Controller
 
         if ($v->fails()) {
             fAbort(403, Err::REQUEST_PARAMS_ERROR);
+        }
+
+        if (!checkModelResult($this->userDao->getUserByUid($uid))) {
+            fAbort(403, Err::USER_NOT_EXIST);
         }
 
         $params = [
@@ -90,7 +101,7 @@ class TopicController extends Controller
             fAbort(403, Err::REQUEST_PARAMS_ERROR);
         }
 
-        if ($this->topicDao->getTopicInfo($topicId)->isEmpty()) {
+        if (!checkModelResult($this->topicDao->getTopicInfo($topicId))) {
             fAbort(403, Err::TOPIC_NOT_EXIST);
         }
 

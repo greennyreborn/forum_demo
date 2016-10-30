@@ -74,7 +74,7 @@ class PostController extends Controller
             fAbort(403, Err::REQUEST_PARAMS_ERROR);
         }
 
-        if ($this->postDao->getPostInfo($postId)->isEmpty()) {
+        if (!checkModelResult($this->postDao->getPostInfo($postId))) {
             fAbort(403, Err::POST_NOT_EXIST);
         }
 

@@ -37,7 +37,7 @@ class BaseCacheModel
         if ($this->cacheTTL > 0 && $this->operation == self::REMEMBER) {
             $this->cacheKey = $this->generateCacheKey($method, $arguments);
             $cached = $this->getCacheContent();
-            if ($cached) {
+            if (checkModelResult($cached)) {
                 return $cached;
             } else {
                 $result = call_user_func_array([$this->model, $method], $arguments);

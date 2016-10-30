@@ -8,7 +8,7 @@
 namespace App\Models;
 
 use App\Libraries\Utils\Err;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 class Topic extends BaseModel
 {

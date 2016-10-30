@@ -34,5 +34,24 @@ if (!function_exists('get_cross_domain_headers')) {
                 app('log')->warning('origin error ' . $origin);
             }
         }
+
+        return [];
     }
 }
+
+/**
+ * 用户检查Laravel 框架中Eloquent 返回的值是否为空
+ */
+if (!function_exists('checkModelResult')) {
+    function checkModelResult($item)
+    {
+        if (!$item) {
+            return false;
+        } elseif ($item instanceof \Illuminate\Support\Collection) {
+            return !$item->isEmpty();
+        } else {
+            return true;
+        }
+    }
+}
+
