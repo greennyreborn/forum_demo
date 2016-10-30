@@ -77,7 +77,6 @@ composer install
 	method: 'PUT',
 	url: '/post/{post_id}',
 	params: {
-		"uid": "4164485977",
 		"content": "啦啦啦"
 	}
 }

@@ -66,7 +66,6 @@ class PostController extends Controller
     {
         $requestParams = $this->request->all();
         $v = Validator::make($requestParams, [
-            'uid' => 'required|integer',
             'content' => 'required|string',
         ]);
 
