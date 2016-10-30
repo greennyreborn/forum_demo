@@ -1,27 +1,124 @@
-# Laravel PHP Framework
+## Intro
+代码用PHP编写，采用Laravel框架
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+## Install
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+```bash
+git clone https://github.com/greennyreborn/forum_demo.git
 
-## Official Documentation
+cd forum_demo
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+composer install
 
-## Contributing
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+## Deploy
 
-## Security Vulnerabilities
+采用 nginx + php-fpm 部署
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+## API list
 
-## License
+* Create user
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+```js
+{
+	method: 'POST',
+	url: '/user',
+	params: {
+		"username": "test",
+		"avatar": "",
+		"password": "12345678"
+	}
+}
+```
+* Create Topic
+
+```js
+{
+	method: 'POST',
+	url: '/topic/user/{uid}',
+	params: {
+		"title": "hello",
+		"type": "1",
+		"content": "test"
+	}
+}
+```
+* Edit Topic
+
+```js
+{
+	method: 'PUT',
+	url: '/topic/{topic_id}',
+	params: {
+		"title": "hello",
+		"type": "1",
+		"content": "test"
+	}
+}
+```
+* Create Post
+
+```js
+{
+	method: 'POST',
+	url: '/post/topic/{topic_id}',
+	params: {
+		"uid": "4164485977",
+		"content": "啦啦啦"
+	}
+}
+```
+* Edit Post
+
+```js
+{
+	method: 'PUT',
+	url: '/post/{post_id}',
+	params: {
+		"uid": "4164485977",
+		"content": "啦啦啦"
+	}
+}
+```
+* Show topic list
+
+```js
+{
+	method: 'GET',
+	url: '/topic/list?offset=0&size=20',
+}
+```
+* Show topic detail
+
+```js
+{
+	method: 'GET',
+	url: '/topic/{topic_id}?offset=0&size=20',
+}
+```
+
+## Scripts
+
+脚本用python编写
+
+需要 mysql-connector 和 requests 模块
+
+* 创建用户
+
+```bash
+python scripts/create_user.py 
+```
+
+* 创建 Topic & Post
+
+```bash
+python scripts/api_test.py
+```
+
+
+
+
+ 
+
